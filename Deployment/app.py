@@ -7,13 +7,13 @@ import joblib
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
 
-# Define features expected by the model
+# Features used when training the model
 feature_names = ['StudyTimeWeekly', 'Absences', 'Tutoring', 'ParentalSupport', 'Engagement']
 
 app = dash.Dash(__name__)
 server = app.server  # For Render
 
-app.layout = html.Div([
+app.layout = html.Div([ #creates web layout
     html.H1("At-Risk Student Predictor"),
 
     html.Label("Study Time Weekly (0 - 20)"),
@@ -46,7 +46,7 @@ app.layout = html.Div([
     State('support', 'value'),
     State('engagement', 'value'),
 )
-def predict_risk(n_clicks, study_time, absences, tutoring, support, engagement):
+def predict_risk(n_clicks, study_time, absences, tutoring, support, engagement): #creates a prediction
     if n_clicks == 0:
         return ""
 
