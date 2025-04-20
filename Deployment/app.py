@@ -8,7 +8,7 @@ model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
 
 # Define features expected by the model
-feature_names = ['StudyTimeWeekly', 'Absences', 'Tutoring', 'ParentalSupport', 'EngagementScore']
+feature_names = ['StudyTimeWeekly', 'Absences', 'Tutoring', 'ParentalSupport', 'Engagement']
 
 app = dash.Dash(__name__)
 server = app.server  # For Render
@@ -16,10 +16,10 @@ server = app.server  # For Render
 app.layout = html.Div([
     html.H1("At-Risk Student Predictor"),
 
-    html.Label("Study Time Weekly"),
+    html.Label("Study Time Weekly (0 - 20)"),
     dcc.Input(id='study_time', type='number', value=5),
 
-    html.Label("Absences"),
+    html.Label("Absences (0 - 30)"),
     dcc.Input(id='absences', type='number', value=3),
 
     html.Label("Tutoring (1=Yes, 0=No)"),
