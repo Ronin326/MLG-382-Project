@@ -3,7 +3,6 @@ from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import pandas as pd
 import joblib
-import gunicorn
 
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
