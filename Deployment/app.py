@@ -3,20 +3,21 @@ from dash import html, dcc
 from dash.dependencies import Input, Output, State
 import pandas as pd
 import joblib
+import gunicorn
 
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
 
-# Features used when training the model
+# all features used in the trained model
 feature_names = ['StudyTimeWeekly', 'Absences', 'Tutoring', 'ParentalSupport', 'Engagement']
 
 app = dash.Dash(__name__)
 server = app.server  # For Render
 
-app.layout = html.Div([ #creates web layout
+app.layout = html.Div([ #creating web ui
     html.H1("At-Risk Student Predictor"),
 
-    html.Label("Study Time Weekly (0 - 20)"),
+    html.Label("Study Time Weekly(0 - 20)"),
     dcc.Input(id='study_time', type='number', value=5),
 
     html.Label("Absences (0 - 30)"),
@@ -28,7 +29,7 @@ app.layout = html.Div([ #creates web layout
     html.Label("Parental Support (0–4)"),
     dcc.Input(id='support', type='number', value=2),
 
-    html.Label("Engagement Score (0–1)"),
+    html.Label("Engagement (0–1)"),
     dcc.Input(id='engagement', type='number', value=0.7),
 
     html.Br(),
@@ -46,11 +47,11 @@ app.layout = html.Div([ #creates web layout
     State('support', 'value'),
     State('engagement', 'value'),
 )
-def predict_risk(n_clicks, study_time, absences, tutoring, support, engagement): #creates a prediction
+def predict_risk(n_clicks, study_time, absences, tutoring, support, engagement):
     if n_clicks == 0:
         return ""
 
-    data = pd.DataFrame([[study_time, absences, tutoring, support, engagement]], columns=feature_names)
+    data = pd.DataFrame([[study_time, absences, tutoring, support, engagement]], columns=feature_names)  #using exported training files to predict
     data_scaled = scaler.transform(data)
     prediction = model.predict(data_scaled)[0]
     probability = model.predict_proba(data_scaled)[0][1]
