@@ -19,8 +19,8 @@ app.layout = html.Div([
     html.H2("Input student information", style={'textAlign': 'center'}),
 
     html.Div([
-        html.Label("Study Time Weekly (0 - 20)"),
-        dcc.Input(id='study_time', type='number', value=5, min=0, max=20, step=1),
+        html.Label("Study Time Weekly (1 - 20)"),
+        dcc.Input(id='study_time', type='number', value=5, min=1, max=20, step=1),
     ], style={'marginBottom': '10px'}),
 
     html.Div([
@@ -92,6 +92,11 @@ def predict_risk(n_clicks, study_time, absences, tutoring, support, engagement):
     prediction = model.predict(data_scaled)[0]
     probability = model.predict_proba(data_scaled)[0][1]
 
+    result = "At Risk" if prediction == 1 else "Not At Risk"
+    return f"Prediction: {result} (Risk Probability: {probability:.2%})"
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
     result = "At Risk" if prediction == 1 else "Not At Risk"
     return f"Prediction: {result} (Risk Probability: {probability:.2%})"
 
