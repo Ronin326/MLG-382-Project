@@ -97,4 +97,3 @@ def predict_risk(n_clicks, study_time, absences, tutoring, support, engagement):
 
 if __name__ == '__main__':
     app.run_server(debug=True)
-    
