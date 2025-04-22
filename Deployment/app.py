@@ -13,29 +13,66 @@ feature_names = ['StudyTimeWeekly', 'Absences', 'Tutoring', 'ParentalSupport', '
 app = dash.Dash(__name__)
 server = app.server  # For Render
 
-app.layout = html.Div([ #creating web ui
-    html.H1("At-Risk Student Predictor"),
+app.layout = html.Div([
+    html.H1("At-Risk Student Predictor", style={'textAlign': 'center'}),
 
-    html.Label("Study Time Weekly(0 - 20)"),
-    dcc.Input(id='study_time', type='number', value=5),
+    html.H2("Input student information", style={'textAlign': 'center'}),
 
-    html.Label("Absences (0 - 30)"),
-    dcc.Input(id='absences', type='number', value=3),
+    html.Div([
+        html.Label("Study Time Weekly (0 - 20)"),
+        dcc.Input(id='study_time', type='number', value=5, min=0, max=20, step=1),
+    ], style={'marginBottom': '10px'}),
 
-    html.Label("Tutoring (1=Yes, 0=No)"),
-    dcc.Input(id='tutoring', type='number', value=1),
+    html.Div([
+        html.Label("Absences (0 - 30)"),
+        dcc.Input(id='absences', type='number', value=3, min=0, max=30, step=1),
+    ], style={'marginBottom': '10px'}),
 
-    html.Label("Parental Support (0–4)"),
-    dcc.Input(id='support', type='number', value=2),
+    html.Div([
+        html.Label("Tutoring"),
+        dcc.Dropdown(
+            id='tutoring',
+            options=[
+                {'label': 'Yes', 'value': 1},
+                {'label': 'No', 'value': 0}
+            ],
+            value=1,
+            clearable=False
+        ),
+    ], style={'marginBottom': '10px'}),
 
-    html.Label("Engagement (0–1)"),
-    dcc.Input(id='engagement', type='number', value=0.7),
+    html.Div([
+        html.Label("Parental Support (0–4)"),
+        dcc.Slider(
+            id='support',
+            min=0,
+            max=4,
+            step=1,
+            value=2,
+            marks={i: str(i) for i in range(5)},
+            tooltip={"placement": "bottom", "always_visible": True}
+        ),
+    ], style={'marginBottom': '20px'}),
 
-    html.Br(),
-    html.Button('Predict', id='predict-btn', n_clicks=0),
-    html.Br(),
-    html.Div(id='prediction-output')
-])
+    html.Div([
+        html.Label("Engagement (0–1)"),
+        dcc.Slider(
+            id='engagement',
+            min=0,
+            max=1,
+            step=0.1,
+            value=0.7,
+            marks={i/10: str(i/10) for i in range(0, 11)},
+            tooltip={"placement": "bottom", "always_visible": True}
+        ),
+    ], style={'marginBottom': '20px'}),
+
+    html.Div([
+        html.Button('Predict', id='predict-btn', n_clicks=0),
+    ], style={'textAlign': 'center', 'margin': '20px'}),
+
+    html.Div(id='prediction-output', style={'fontWeight': 'bold', 'textAlign': 'center'})
+], style={'width': '60%', 'margin': 'auto', 'padding': '20px'})
 
 @app.callback(
     Output('prediction-output', 'children'),
